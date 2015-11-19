@@ -1,0 +1,6 @@
+D:\Projects\RomanNumeralConverter\RomanNumeralConverter\bin\Debug\RomanNumeralDecimalConverter.exe.config
+D:\Projects\RomanNumeralConverter\RomanNumeralConverter\bin\Debug\RomanNumeralDecimalConverter.exe
+D:\Projects\RomanNumeralConverter\RomanNumeralConverter\bin\Debug\RomanNumeralDecimalConverter.pdb
+D:\Projects\RomanNumeralConverter\RomanNumeralConverter\obj\Debug\RomanNumeralDecimalConverter.exe
+D:\Projects\RomanNumeralConverter\RomanNumeralConverter\obj\Debug\RomanNumeralDecimalConverter.pdb
+D:\Projects\RomanNumeralConverter\RomanNumeralConverter\obj\Debug\RomanNumeralDecimalConverter.csprojResolveAssemblyReference.cache
