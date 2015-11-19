@@ -3,14 +3,31 @@ using System.Globalization;
 
 namespace RomanNumeralDecimalConverter
 {
+    /// <summary>
+    /// Defines the structure and properties of a Roman Numeral Fragment.
+    /// A fragment can be defined as either additive or subtractive.
+    /// An additive fragments value is calculated by adding the decimal values of the letters
+    /// A subtractive fragments value is calculated by subtracting the value of the first letter from the second
+    /// </summary>
     public class RomanNumeralFragment
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="letters"></param>
         public RomanNumeralFragment(string letters)
         {
             RomanNumerals = letters;
         }
 
+        /// <summary>
+        /// String representation of Roman Numeral Fragment
+        /// </summary>
         public string RomanNumerals { get; set; }
+
+        /// <summary>
+        /// Calculates the integer value of the fragment
+        /// </summary>
         public int Value { 
             get            
             {
