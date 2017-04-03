@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using static System.String;
 
 namespace RomanNumeralDecimalConverter
 {
@@ -15,16 +15,18 @@ namespace RomanNumeralDecimalConverter
         public static string ConvertToRomanNumerals(int number)
         {
             // Create fragment list and list of numeral characters to loop through
-            List<RomanNumeralFragment> result = new List<RomanNumeralFragment>();
-            List<RomanNumeral> romanNumerals = new List<RomanNumeral>();
+            var result = new List<RomanNumeralFragment>();
+            var romanNumerals = new List<RomanNumeral>
+            {
+                RomanNumeral.M,
+                RomanNumeral.D,
+                RomanNumeral.C,
+                RomanNumeral.L,
+                RomanNumeral.X,
+                RomanNumeral.V,
+                RomanNumeral.I
+            };
 
-            romanNumerals.Add(RomanNumeral.M);
-            romanNumerals.Add(RomanNumeral.D);
-            romanNumerals.Add(RomanNumeral.C);
-            romanNumerals.Add(RomanNumeral.L);
-            romanNumerals.Add(RomanNumeral.X);
-            romanNumerals.Add(RomanNumeral.V);
-            romanNumerals.Add(RomanNumeral.I);
 
             foreach (var romanNumeral in romanNumerals)
             {
@@ -37,7 +39,7 @@ namespace RomanNumeralDecimalConverter
             }
 
             // Join fragment strings together and output
-            var output = String.Join("", result.Select(r => r.RomanNumerals).AsEnumerable());
+            var output = Join("", result.Select(r => r.RomanNumerals).AsEnumerable());
             return output;
         }
 
@@ -114,9 +116,9 @@ namespace RomanNumeralDecimalConverter
         /// <returns></returns>
         private static string GetAdditiveFragmentString(int numeralCount, RomanNumeral romanNumeral)
         {
-            string result = string.Empty;
+            var result = Empty;
 
-            for (int i = 0; i < numeralCount; i++)
+            for (var i = 0; i < numeralCount; i++)
             {
                 result += romanNumeral.ToString();
             }
@@ -132,7 +134,7 @@ namespace RomanNumeralDecimalConverter
         /// <returns></returns>
         private static string GetSubtractiveFragmentString(RomanNumeral firstLetter, RomanNumeral secondLetter)
         {
-            var result = firstLetter.ToString() + secondLetter.ToString();
+            var result = firstLetter + secondLetter.ToString();
             return result;
         }
 
@@ -145,7 +147,7 @@ namespace RomanNumeralDecimalConverter
         private static int GetFullNumeralCount(int value, RomanNumeral numeral)
         {
             // Get number of whole numerals to return from value
-            int numeralCount = value / (int)numeral;
+            var numeralCount = value / (int)numeral;
 
             return numeralCount;
         }

@@ -14,7 +14,7 @@ namespace RomanNumeralDecimalConverter
         /// <returns></returns>
         public static int ConvertToDecimal(string romanNumerals)
         {
-            List<RomanNumeralFragment> fragments = new List<RomanNumeralFragment>();
+            var fragments = new List<RomanNumeralFragment>();
             // Remove fragments from string until the string is empty
             do
             {
@@ -45,54 +45,45 @@ namespace RomanNumeralDecimalConverter
                 // if subtractive, it will only use first 2 chars if the first is less than the second
                 if (CommonFunctions.GetRomanNumeralValue(firstChar) < CommonFunctions.GetRomanNumeralValue(secondChar))
                 {
-                    return new RomanNumeralFragment(firstChar.ToString() + secondChar.ToString());
+                    return new RomanNumeralFragment(firstChar + secondChar.ToString());
                 }
-                else
+                // additive - loop through letters until end or we come across a subtractive fragment
+                for (var i = 0; i < romanNumerals.Length; i++)
                 {
-                    // additive - loop through letters until end or we come across a subtractive fragment
-                    for (int i = 0; i < romanNumerals.Length; i++)
-                    {
-                        var letter = romanNumerals[i];
+                    var letter = romanNumerals[i];
 
-                        // add first letter to string
-                        if (letters.Length == 0)
+                    // add first letter to string
+                    if (letters.Length == 0)
+                    {
+                        letters += letter;
+                    }
+                    else
+                    {
+                        // if last letter, append to string
+                        if (i == romanNumerals.Length - 1)
                         {
                             letters += letter;
                         }
                         else
                         {
-                            // if last letter, append to string
-                            if (i == romanNumerals.Length - 1)
-                            {
-                                letters += letter;
-                            }
-                            else
-                            {
-                                //check if current and subsequent letter are subtractive
-                                var secondLetter = romanNumerals[i + 1];
+                            //check if current and subsequent letter are subtractive
+                            var secondLetter = romanNumerals[i + 1];
 
-                                if (CommonFunctions.GetRomanNumeralValue(letter) < CommonFunctions.GetRomanNumeralValue(secondLetter))
-                                {
-                                    // if subtractive, return fragment without current letter
-                                    return new RomanNumeralFragment(letters);
-                                }
-                                else
-                                {
-                                    // add letter to string
-                                    letters += letter;
-                                }
+                            if (CommonFunctions.GetRomanNumeralValue(letter) < CommonFunctions.GetRomanNumeralValue(secondLetter))
+                            {
+                                // if subtractive, return fragment without current letter
+                                return new RomanNumeralFragment(letters);
                             }
+                            // add letter to string
+                            letters += letter;
                         }
                     }
-
-                    return new RomanNumeralFragment(letters);
                 }
+
+                return new RomanNumeralFragment(letters);
             }
-            else
-            {
-                // return single letter fragment
-                return new RomanNumeralFragment(romanNumerals);
-            }
+            // return single letter fragment
+            return new RomanNumeralFragment(romanNumerals);
         }
 
         #endregion

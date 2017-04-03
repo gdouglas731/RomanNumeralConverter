@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 
 namespace RomanNumeralDecimalConverter
 {
@@ -35,10 +36,7 @@ namespace RomanNumeralDecimalConverter
 
                 if (IsAdditive)
 	            {
-		            foreach (var chr in RomanNumerals)
-                    {
-                        result += CommonFunctions.GetRomanNumeralValue(chr);
-                    } 
+	                result += RomanNumerals.Sum(CommonFunctions.GetRomanNumeralValue);
 	            }
                 else if(IsSubtractive)
                 {
@@ -58,18 +56,18 @@ namespace RomanNumeralDecimalConverter
             get
             {
                 // if only one character long, return false
-                if (this.RomanNumerals.Length <= 1)
+                if (RomanNumerals.Length <= 1)
                     return false;
 
                 // if first letter is less than second letter, return false
                 RomanNumeral firstLetter;
 
-                if (Enum.TryParse<RomanNumeral>(RomanNumerals[0].ToString(), out firstLetter) == false)
+                if (Enum.TryParse(RomanNumerals[0].ToString(), out firstLetter) == false)
                     return false;
 
                 RomanNumeral secondLetter;
 
-                if (Enum.TryParse<RomanNumeral>(RomanNumerals[1].ToString(), out secondLetter) == false)
+                if (Enum.TryParse(RomanNumerals[1].ToString(), out secondLetter) == false)
                     return false;
 
                 return (int)firstLetter >= (int)secondLetter;
@@ -80,18 +78,18 @@ namespace RomanNumeralDecimalConverter
             get
             {
                 // if only one character long, return false
-                if (this.RomanNumerals.Length <= 1)
+                if (RomanNumerals.Length <= 1)
                     return false;
 
                 // if first letter is less than second letter, return true
                 RomanNumeral firstLetter;
 
-                if (Enum.TryParse<RomanNumeral>(RomanNumerals[0].ToString(CultureInfo.CurrentCulture), out firstLetter) == false)
+                if (Enum.TryParse(RomanNumerals[0].ToString(CultureInfo.CurrentCulture), out firstLetter) == false)
                     return false;
 
                 RomanNumeral secondLetter;
 
-                if (Enum.TryParse<RomanNumeral>(RomanNumerals[1].ToString(CultureInfo.CurrentCulture), out secondLetter) == false)
+                if (Enum.TryParse(RomanNumerals[1].ToString(CultureInfo.CurrentCulture), out secondLetter) == false)
                     return false;
 
                 return (int)firstLetter < (int)secondLetter;

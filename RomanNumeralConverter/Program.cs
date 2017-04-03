@@ -3,24 +3,25 @@ using System.Globalization;
 
 namespace RomanNumeralDecimalConverter
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var input = string.Empty;
+            string input;
 
             do
             {
                 Console.WriteLine("Enter the number you'd like to convert to roman numerals:");
                 input = Console.ReadLine();
 
-                if (input.Length > 0)
+                if (!string.IsNullOrEmpty(input))
                 {
-                    var romanNumeral = RomanNumeralConverter.ConvertToRomanNumerals(Convert.ToInt32(input, CultureInfo.CurrentCulture));
+                    var romanNumeral =
+                        RomanNumeralConverter.ConvertToRomanNumerals(Convert.ToInt32(input, CultureInfo.CurrentCulture));
                     Console.WriteLine(romanNumeral);
                     Console.WriteLine(DecimalConverter.ConvertToDecimal(romanNumeral));
                 }
-            } while (input.Length > 0);
+            } while (!string.IsNullOrEmpty(input));
             
         }
     }

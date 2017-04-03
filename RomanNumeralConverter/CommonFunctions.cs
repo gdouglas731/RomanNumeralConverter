@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RomanNumeralDecimalConverter
 {
@@ -18,7 +14,7 @@ namespace RomanNumeralDecimalConverter
         {
             RomanNumeral result;
 
-            if (Enum.TryParse<RomanNumeral>(romanNumeral.ToString(), out result))
+            if (Enum.TryParse(romanNumeral.ToString(), out result))
             {
                 return (int)result;
             }
