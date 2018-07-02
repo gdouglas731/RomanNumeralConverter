@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using static System.String;
 
@@ -15,7 +16,7 @@ namespace RomanNumeralDecimalConverter
         public static string ConvertToRomanNumerals(int number)
         {
             // Create fragment list and list of numeral characters to loop through
-            var result = new List<RomanNumeralFragment>();
+            var result = new List<Fragment>();
             var romanNumerals = new List<RomanNumeral>
             {
                 RomanNumeral.M,
@@ -52,15 +53,15 @@ namespace RomanNumeralDecimalConverter
         /// <param name="romanNumeral"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static List<RomanNumeralFragment> GetFragmentsForRomanNumeral(RomanNumeral romanNumeral, int value)
+        public static List<Fragment> GetFragmentsForRomanNumeral(RomanNumeral romanNumeral, int value)
         {
-            var result = new List<RomanNumeralFragment>();
+            var result = new List<Fragment>();
             var count = GetFullNumeralCount(value, romanNumeral);
             var fragmentString = GetAdditiveFragmentString(count, romanNumeral);
 
             if (fragmentString.Length > 0)
             {
-                var fragment = new RomanNumeralFragment(fragmentString);
+                var fragment = new Fragment(fragmentString);
 
                 result.Add(fragment);
 
@@ -83,26 +84,31 @@ namespace RomanNumeralDecimalConverter
         /// <param name="currentRomanNumeral"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static RomanNumeralFragment GetSubtractiveFragment(RomanNumeral currentRomanNumeral, int value)
+        public static Fragment GetSubtractiveFragment(RomanNumeral currentRomanNumeral, int value)
         {
-            RomanNumeralFragment fragment = null;
+            Fragment fragment = null;
 
-            // check if value if difference is greater than numeral minus C
-            if ((value > (int)RomanNumeral.C) && (value >= ((int)currentRomanNumeral - (int)RomanNumeral.C)))
+            // TODO: Implement logic - a roman numeral can only be subtractive if the next biggest roman numeral
+            // isn't double the value of the current one, for example:
+            // 'I' (1) can be subtractive because 'V' (5) is 5 times the value of 'I'
+            // 'V' (5) cannot be subtractive because 'X' (10) is double the value 'V'
+                        
+            
+            var enumValues = (RomanNumeral[])Enum.GetValues(typeof(RomanNumeral));
+
+            // Loop through enums and check if enum is a subtractor
+            foreach (RomanNumeral enumValue in enumValues.OrderByDescending(numeral => (int)numeral))
             {
-                // if greater, we need to use a C subtractive fragment
-                fragment = new RomanNumeralFragment(GetSubtractiveFragmentString(RomanNumeral.C, currentRomanNumeral));
-            }
-            // if false, check for X and I using rules above
-            else if ((value > (int)RomanNumeral.X) && (value >= ((int)currentRomanNumeral - (int)RomanNumeral.X)))
-            {
-                // if greater, we need to use a X subtractive fragment
-                fragment = new RomanNumeralFragment(GetSubtractiveFragmentString(RomanNumeral.X, currentRomanNumeral));
-            }
-            else if ((value > (int)RomanNumeral.I) && (value >= ((int)currentRomanNumeral - (int)RomanNumeral.I)))
-            {
-                // if greater, we need to use a I subtractive fragment
-                fragment = new RomanNumeralFragment(GetSubtractiveFragmentString(RomanNumeral.I, currentRomanNumeral));
+                if (CanBeSubtractor(enumValue))
+                {
+                    // check if value is greater than enumValue and if value is difference between currentRomanNumeral and enumValue
+                    if ((value > (int)enumValue) && (value >= ((int)currentRomanNumeral - (int)enumValue)))
+                    {
+                        // if greater, we need to use a subtractive fragment
+                        fragment = new Fragment(GetSubtractiveFragmentString(enumValue, currentRomanNumeral));
+                        return fragment;
+                    }
+                }
             }
 
             return fragment;
@@ -114,7 +120,7 @@ namespace RomanNumeralDecimalConverter
         /// <param name="numeralCount"></param>
         /// <param name="romanNumeral"></param>
         /// <returns></returns>
-        private static string GetAdditiveFragmentString(int numeralCount, RomanNumeral romanNumeral)
+        public static string GetAdditiveFragmentString(int numeralCount, RomanNumeral romanNumeral)
         {
             var result = Empty;
 
@@ -132,7 +138,7 @@ namespace RomanNumeralDecimalConverter
         /// <param name="firstLetter"></param>
         /// <param name="secondLetter"></param>
         /// <returns></returns>
-        private static string GetSubtractiveFragmentString(RomanNumeral firstLetter, RomanNumeral secondLetter)
+        public static string GetSubtractiveFragmentString(RomanNumeral firstLetter, RomanNumeral secondLetter)
         {
             var result = firstLetter + secondLetter.ToString();
             return result;
@@ -150,6 +156,44 @@ namespace RomanNumeralDecimalConverter
             var numeralCount = value / (int)numeral;
 
             return numeralCount;
+        }
+
+        /// <summary>
+        /// A roman numeral can only be subtractive if the next biggest roman numeral 
+        /// is not double the value of the current one, for example: 
+        /// 'I' (1) can be subtractive because 'V' (5) is 5 times the value of 'I' 
+        /// 'V' (5) cannot be subtractive because 'X' (10) is double the value 'V'
+        /// </summary>
+        /// <param name="numeral"></param>
+        /// <returns></returns>
+        public static bool CanBeSubtractor(RomanNumeral numeral)
+        {
+            if (numeral == RomanNumeral.None)
+            {
+                return false;
+            }
+
+            var enumValues = (RomanNumeral[])Enum.GetValues(typeof(RomanNumeral));
+
+            var numeralIndex = Array.IndexOf(enumValues, numeral);
+
+            if (numeralIndex > -1)
+            {
+                try
+                {
+                    var nextBiggestRomanNumeral = enumValues.ElementAt(numeralIndex + 1);
+
+                    // Return false if next biggest enum value is 2 times bigger than current value
+                    return (int)nextBiggestRomanNumeral / (int)numeral != 2;
+                }
+                // Will be thrown if there is no bigger roman numeral, return false in this case
+                catch (ArgumentOutOfRangeException ex)
+                {                    
+                    return false;                    
+                }
+            }
+
+            throw new ArgumentException("Invalid numeral value", "numeral");
         }
         #endregion
     }
